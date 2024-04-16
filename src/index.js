@@ -55,7 +55,7 @@
  *
  * new Suggestions(input, data);
  */
-var Suggestions = require('./src/suggestions');
+var Suggestions = require('./suggestions');
 module.exports = Suggestions;
 
 if (typeof window !== 'undefined') {
