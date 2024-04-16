@@ -22,6 +22,11 @@ class Suggestions {
     this.data = data || [];
     this.list = new List(this);
 
+    // set aria attribuets on el
+    this.el.setAttribute('role', 'combobox');
+    this.el.setAttribute('aria-autocomplete', 'list');
+    this.el.setAttribute('aria-controls', this.list.id);
+
     this.query = '';
     this.selected = null;
 
