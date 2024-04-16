@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/tristen/suggestions.git"
+    "url": "git+ssh://git@github.com/hsdonkin/suggestions.git"
   },
   "keywords": [
     "typeahead",
