@@ -5,8 +5,7 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "dev": "parcel src/index.html src/index.js",
-    "build": "parcel build src/index.js",
+    "build": "vite build",
     "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,12 +24,15 @@
     "url": "https://github.com/hsdonkin/suggestions/issues"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "eslint": "^9.0.0",
-    "parcel": "^2.12.0",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "vite": "^5.2.9"
   },
   "dependencies": {
     "fuzzy": "^0.1.1",
+    "i": "^0.3.7",
+    "npm": "^10.5.2",
     "xtend": "^4.0.0"
   }
 }

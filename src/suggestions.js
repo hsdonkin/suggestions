@@ -1,8 +1,6 @@
-'use strict';
-
-var extend = require('xtend');
-var fuzzy = require('fuzzy');
-var List = require('./list');
+import extend from 'xtend';
+import fuzzy from 'fuzzy';
+import List from './List';
 
 class Suggestions {
   constructor(el, data, options) {
@@ -289,4 +287,4 @@ class Suggestions {
   };
 }
 
-module.exports = Suggestions;
+export default Suggestions;
