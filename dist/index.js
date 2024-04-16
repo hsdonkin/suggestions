@@ -54,7 +54,10 @@ $35db4a0a75680d5b$var$List.prototype.draw = function() {
 };
 $35db4a0a75680d5b$var$List.prototype.drawItem = function(item, active) {
     var li = document.createElement("li"), a = document.createElement("a");
-    if (active) li.className += " active";
+    if (active) {
+        li.className += " active";
+        li.setAttribute("aria-selected", "true");
+    }
     a.innerHTML = item.string;
     li.appendChild(a);
     this.element.appendChild(li);
