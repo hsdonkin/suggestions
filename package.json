@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "dev": "parcel src/index.js",
+    "dev": "parcel src/index.html src/index.js",
     "build": "parcel build src/index.js",
     "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1"
