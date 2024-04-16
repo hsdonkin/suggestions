@@ -5,4 +5,4 @@ if (typeof window !== 'undefined') {
   window.Suggestions = Suggestions;
 }
 
-export { Suggestions, List };
+export default Suggestions;
