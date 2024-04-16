@@ -1,12 +1,15 @@
 {
   "name": "suggestions",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "description": "A typeahead component for inputs",
-  "main": "dist/index.js",
+  "source": [
+    "src/index.js",
+    "src/suggestions.css"
+  ],
   "type": "module",
   "scripts": {
     "dev": "parcel src/index.html src/index.js",
-    "build": "parcel build src/index.js",
+    "build": "parcel build",
     "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,12 +22,11 @@
     "autocomplete",
     "component"
   ],
-  "author": "tristen",
+  "author": "tristen, hsdonkin",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/tristen/suggestions/issues"
+    "url": "https://github.com/hsdonkin/suggestions/issues"
   },
-  "homepage": "https://github.com/tristen/suggestions#readme",
   "devDependencies": {
     "eslint": "^9.0.0",
     "parcel": "^2.12.0",
