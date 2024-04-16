@@ -3,18 +3,10 @@
   "version": "1.7.3",
   "description": "A typeahead component for inputs",
   "main": "dist/index.js",
-  "files": [
-    "dist/index.js",
-    "dist/suggestions.css"
-  ],
-  "source": [
-    "src/index.js",
-    "src/suggestions.css"
-  ],
   "type": "module",
   "scripts": {
     "dev": "parcel src/index.html src/index.js",
-    "build": "parcel build",
+    "build": "parcel build src/index.js",
     "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

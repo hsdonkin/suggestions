@@ -1,2 +1,314 @@
-var t,e,i,s,n,r;t={},e={},e=function(){for(var t={},e=0;e<arguments.length;e++){var s=arguments[e];for(var n in s)i.call(s,n)&&(t[n]=s[n])}return t},i=Object.prototype.hasOwnProperty,s={},s=n={},n.simpleFilter=function(t,e){return e.filter(function(e){return n.test(t,e)})},n.test=function(t,e){return null!==n.match(t,e)},n.match=function(t,e,i){i=i||{};var s,n=0,r=[],h=e.length,a=0,l=0,o=i.pre||"",d=i.post||"",u=i.caseSensitive&&e||e.toLowerCase();t=i.caseSensitive&&t||t.toLowerCase();for(var c=0;c<h;c++)s=e[c],u[c]===t[n]?(s=o+s+d,n+=1,l+=1+l):l=0,a+=l,r[r.length]=s;return n===t.length?(a=u===t?1/0:a,{rendered:r.join(""),score:a}):null},n.filter=function(t,e,i){return e&&0!==e.length?"string"!=typeof t?e:(i=i||{},e.reduce(function(e,s,r,h){var a=s;i.extract&&(a=i.extract(s));var l=n.match(t,a,i);return null!=l&&(e[e.length]={string:l.rendered,score:l.score,index:r,original:s}),e},[]).sort(function(t,e){return e.score-t.score||t.index-e.index})):[]},r={},r=class{constructor(t){this.component=t,this.id="suggestions-"+Math.random().toString(36).substr(2,16),this.items=[],this.active=0,this.wrapper=document.createElement("div"),this.wrapper.className="suggestions-wrapper",this.element=document.createElement("ul"),this.element.className="suggestions",this.element.id=this.id,this.element.setAttribute("role","listbox"),this.element.setAttribute("aria-label","Results"),this.wrapper.appendChild(this.element),this.selectingListItem=!1,t.el.parentNode.insertBefore(this.wrapper,t.el.nextSibling)}show(){this.element.style.display="block"}hide(){this.element.style.display="none"}add(t){this.items.push(t)}clear(){this.items=[],this.active=0}isEmpty(){return!this.items.length}isVisible(){return"block"===this.element.style.display}draw(){if(this.element.innerHTML="",0===this.items.length){this.hide();return}for(let t=0;t<this.items.length;t++)this.drawItem(this.items[t],this.active===t);this.show()}drawItem(t,e){let i=document.createElement("li"),s=document.createElement("a"),n=this.id+"-"+this.items.indexOf(t);i.setAttribute("id",n),i.setAttribute("role","option"),e&&(this.component.el.setAttribute("aria-activedescendant",n),i.className+=" active",i.setAttribute("aria-selected","true")),s.innerHTML=t.string,s.setAttribute("aria-label",s.textContent),i.appendChild(s),this.element.appendChild(i),i.addEventListener("mousedown",()=>{this.selectingListItem=!0}),i.addEventListener("mouseup",()=>{this.handleMouseUp(t)})}handleMouseUp(t){this.selectingListItem=!1,this.component.value(t.original),this.clear(),this.draw()}move(t){this.active=t,this.draw()}previous(){this.move(0===this.active?this.items.length-1:this.active-1)}next(){this.move(this.active===this.items.length-1?0:this.active+1)}drawError(t){let e=document.createElement("li");e.innerHTML=t,this.element.appendChild(e),this.show()}},t=class{constructor(t,i,s){s=s||{},this.options=e({minLength:2,limit:5,filter:!0,hideOnBlur:!0},s),this.el=t,this.data=i||[],this.list=new r(this),this.el.setAttribute("role","combobox"),this.el.setAttribute("aria-autocomplete","list"),this.el.setAttribute("aria-controls",this.list.id),this.query="",this.selected=null,this.list.draw(),this.el.addEventListener("keyup",(function(t){this.handleKeyUp(t.keyCode)}).bind(this),!1),this.el.addEventListener("keydown",(function(t){this.handleKeyDown(t)}).bind(this)),this.el.addEventListener("focus",(function(){this.handleFocus()}).bind(this)),this.el.addEventListener("blur",(function(){this.handleBlur()}).bind(this)),this.el.addEventListener("paste",(function(t){this.handlePaste(t)}).bind(this)),this.render=this.options.render?this.options.render.bind(this):this.render.bind(this),this.getItemValue=this.options.getItemValue?this.options.getItemValue.bind(this):this.getItemValue.bind(this)}handleKeyUp=function(t){40!==t&&38!==t&&27!==t&&13!==t&&9!==t&&this.handleInputChange(this.el.value)};handleKeyDown=function(t){switch(t.keyCode){case 13:case 9:this.list.isEmpty()||(this.list.isVisible()&&t.preventDefault(),this.value(this.list.items[this.list.active].original),this.list.hide());break;case 27:this.list.isEmpty()||this.list.hide();break;case 38:this.list.previous();break;case 40:this.list.next()}};handleBlur=function(){!this.list.selectingListItem&&this.options.hideOnBlur&&this.list.hide()};handlePaste=function(t){if(t.clipboardData)this.handleInputChange(t.clipboardData.getData("Text"));else{var e=this;setTimeout(function(){e.handleInputChange(t.target.value)},100)}};handleInputChange=function(t){if(this.query=this.normalize(t),this.list.clear(),this.query.length<this.options.minLength){this.list.draw();return}this.getCandidates((function(t){for(var e=0;e<t.length&&(this.list.add(t[e]),e!==this.options.limit-1);e++);this.list.draw()}).bind(this))};handleFocus=function(){this.list.isEmpty()||this.list.show(),this.list.selectingListItem=!1};update=function(t){this.data=t,this.handleKeyUp()};clear=function(){this.data=[],this.list.clear()};normalize=function(t){return t=t.toLowerCase()};match=function(t,e){return t.indexOf(e)>-1};value=function(t){if(this.selected=t,this.el.value=this.getItemValue(t),document.createEvent){var e=document.createEvent("HTMLEvents");e.initEvent("change",!0,!1),this.el.dispatchEvent(e)}else this.el.fireEvent("onchange")};getCandidates=function(t){var e={pre:"<strong>",post:"</strong>",extract:(function(t){return this.getItemValue(t)}).bind(this)};t(this.options.filter?s.filter(this.query,this.data,e).map((function(t){return{original:t.original,string:this.render(t.original,t.string)}}).bind(this)):this.data.map((function(t){var e=this.render(t);return{original:t,string:e}}).bind(this)))};getItemValue=function(t){return t};render=function(t,e){if(e)return e;for(var i=t.original?this.getItemValue(t.original):this.getItemValue(t),s=this.normalize(i),n=s.lastIndexOf(this.query);n>-1;){var r=n+this.query.length;i=i.slice(0,n)+"<strong>"+i.slice(n,r)+"</strong>"+i.slice(r),n=s.slice(0,n).lastIndexOf(this.query)}return i};renderError=function(t){this.list.drawError(t)}},"undefined"!=typeof window&&(window.Suggestions=t);
+import * as $5OpyM$xtend from "xtend";
+import {filter as $5OpyM$filter} from "fuzzy";
+
+
+function $parcel$interopDefault(a) {
+  return a && a.__esModule ? a.default : a;
+}
+var $4459fe2e485752c1$exports = {};
+"use strict";
+
+
+var $2651df716b8fd793$exports = {};
+class $2651df716b8fd793$var$List {
+    constructor(component){
+        this.component = component;
+        this.id = "suggestions-" + Math.random().toString(36).substr(2, 16);
+        this.items = [];
+        this.active = 0;
+        this.wrapper = document.createElement("div");
+        this.wrapper.className = "suggestions-wrapper";
+        this.element = document.createElement("ul");
+        this.element.className = "suggestions";
+        this.element.id = this.id;
+        this.element.setAttribute("role", "listbox");
+        this.element.setAttribute("aria-label", "Results");
+        this.wrapper.appendChild(this.element);
+        this.selectingListItem = false;
+        component.el.parentNode.insertBefore(this.wrapper, component.el.nextSibling);
+    }
+    show() {
+        this.element.style.display = "block";
+    }
+    hide() {
+        this.element.style.display = "none";
+    }
+    add(item) {
+        this.items.push(item);
+    }
+    clear() {
+        this.items = [];
+        this.active = 0;
+    }
+    isEmpty() {
+        return !this.items.length;
+    }
+    isVisible() {
+        return this.element.style.display === "block";
+    }
+    draw() {
+        this.element.innerHTML = "";
+        if (this.items.length === 0) {
+            this.hide();
+            return;
+        }
+        for(let i = 0; i < this.items.length; i++)this.drawItem(this.items[i], this.active === i);
+        this.show();
+    }
+    drawItem(item, active) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        const id = this.id + "-" + this.items.indexOf(item);
+        li.setAttribute("id", id);
+        li.setAttribute("role", "option");
+        if (active) {
+            this.component.el.setAttribute("aria-activedescendant", id);
+            li.className += " active";
+            li.setAttribute("aria-selected", "true");
+        }
+        a.innerHTML = item.string;
+        a.setAttribute("aria-label", a.textContent);
+        li.appendChild(a);
+        this.element.appendChild(li);
+        li.addEventListener("mousedown", ()=>{
+            this.selectingListItem = true;
+        });
+        li.addEventListener("mouseup", ()=>{
+            this.handleMouseUp(item);
+        });
+    }
+    handleMouseUp(item) {
+        this.selectingListItem = false;
+        this.component.value(item.original);
+        this.clear();
+        this.draw();
+    }
+    move(index) {
+        this.active = index;
+        this.draw();
+    }
+    previous() {
+        this.move(this.active === 0 ? this.items.length - 1 : this.active - 1);
+    }
+    next() {
+        this.move(this.active === this.items.length - 1 ? 0 : this.active + 1);
+    }
+    drawError(msg) {
+        const li = document.createElement("li");
+        li.innerHTML = msg;
+        this.element.appendChild(li);
+        this.show();
+    }
+}
+$2651df716b8fd793$exports = $2651df716b8fd793$var$List;
+
+
+class $4459fe2e485752c1$var$Suggestions {
+    constructor(el, data, options){
+        options = options || {};
+        this.options = $5OpyM$xtend({
+            minLength: 2,
+            limit: 5,
+            filter: true,
+            hideOnBlur: true
+        }, options);
+        this.el = el;
+        this.data = data || [];
+        this.list = new $2651df716b8fd793$exports(this);
+        // set aria attribuets on el
+        this.el.setAttribute("role", "combobox");
+        this.el.setAttribute("aria-autocomplete", "list");
+        this.el.setAttribute("aria-controls", this.list.id);
+        this.query = "";
+        this.selected = null;
+        this.list.draw();
+        this.el.addEventListener("keyup", (function(e) {
+            this.handleKeyUp(e.keyCode);
+        }).bind(this), false);
+        this.el.addEventListener("keydown", (function(e) {
+            this.handleKeyDown(e);
+        }).bind(this));
+        this.el.addEventListener("focus", (function() {
+            this.handleFocus();
+        }).bind(this));
+        this.el.addEventListener("blur", (function() {
+            this.handleBlur();
+        }).bind(this));
+        this.el.addEventListener("paste", (function(e) {
+            this.handlePaste(e);
+        }).bind(this));
+        // use user-provided render function if given, otherwise just use the default
+        this.render = this.options.render ? this.options.render.bind(this) : this.render.bind(this);
+        this.getItemValue = this.options.getItemValue ? this.options.getItemValue.bind(this) : this.getItemValue.bind(this);
+    }
+    handleKeyUp = function(keyCode) {
+        // 40 - DOWN
+        // 38 - UP
+        // 27 - ESC
+        // 13 - ENTER
+        // 9 - TAB
+        if (keyCode === 40 || keyCode === 38 || keyCode === 27 || keyCode === 13 || keyCode === 9) return;
+        this.handleInputChange(this.el.value);
+    };
+    handleKeyDown = function(e) {
+        switch(e.keyCode){
+            case 13:
+            case 9:
+                if (!this.list.isEmpty()) {
+                    if (this.list.isVisible()) e.preventDefault();
+                    this.value(this.list.items[this.list.active].original);
+                    this.list.hide();
+                }
+                break;
+            case 27:
+                if (!this.list.isEmpty()) this.list.hide();
+                break;
+            case 38:
+                this.list.previous();
+                break;
+            case 40:
+                this.list.next();
+                break;
+        }
+    };
+    handleBlur = function() {
+        if (!this.list.selectingListItem && this.options.hideOnBlur) this.list.hide();
+    };
+    handlePaste = function(e) {
+        if (e.clipboardData) this.handleInputChange(e.clipboardData.getData("Text"));
+        else {
+            var self = this;
+            setTimeout(function() {
+                self.handleInputChange(e.target.value);
+            }, 100);
+        }
+    };
+    handleInputChange = function(query) {
+        this.query = this.normalize(query);
+        this.list.clear();
+        if (this.query.length < this.options.minLength) {
+            this.list.draw();
+            return;
+        }
+        this.getCandidates((function(data) {
+            for(var i = 0; i < data.length; i++){
+                this.list.add(data[i]);
+                if (i === this.options.limit - 1) break;
+            }
+            this.list.draw();
+        }).bind(this));
+    };
+    handleFocus = function() {
+        if (!this.list.isEmpty()) this.list.show();
+        this.list.selectingListItem = false;
+    };
+    /**
+   * Update data previously passed
+   *
+   * @param {Array} revisedData
+   */ update = function(revisedData) {
+        this.data = revisedData;
+        this.handleKeyUp();
+    };
+    /**
+   * Clears data
+   */ clear = function() {
+        this.data = [];
+        this.list.clear();
+    };
+    /**
+   * Normalize the results list and input value for matching
+   *
+   * @param {String} value
+   * @return {String}
+   */ normalize = function(value) {
+        value = value.toLowerCase();
+        return value;
+    };
+    /**
+   * Evaluates whether an array item qualifies as a match with the current query
+   *
+   * @param {String} candidate a possible item from the array passed
+   * @param {String} query the current query
+   * @return {Boolean}
+   */ match = function(candidate, query) {
+        return candidate.indexOf(query) > -1;
+    };
+    value = function(value) {
+        this.selected = value;
+        this.el.value = this.getItemValue(value);
+        if (document.createEvent) {
+            var e = document.createEvent("HTMLEvents");
+            e.initEvent("change", true, false);
+            this.el.dispatchEvent(e);
+        } else this.el.fireEvent("onchange");
+    };
+    getCandidates = function(callback) {
+        var options = {
+            pre: "<strong>",
+            post: "</strong>",
+            extract: (function(d) {
+                return this.getItemValue(d);
+            }).bind(this)
+        };
+        var results;
+        if (this.options.filter) {
+            results = $5OpyM$filter(this.query, this.data, options);
+            results = results.map((function(item) {
+                return {
+                    original: item.original,
+                    string: this.render(item.original, item.string)
+                };
+            }).bind(this));
+        } else results = this.data.map((function(d) {
+            var renderedString = this.render(d);
+            return {
+                original: d,
+                string: renderedString
+            };
+        }).bind(this));
+        callback(results);
+    };
+    /**
+   * For a given item in the data array, return what should be used as the candidate string
+   *
+   * @param {Object|String} item an item from the data array
+   * @return {String} item
+   */ getItemValue = function(item) {
+        return item;
+    };
+    /**
+   * For a given item in the data array, return a string of html that should be rendered in the dropdown
+   * @param {Object|String} item an item from the data array
+   * @param {String} sourceFormatting a string that has pre-formatted html that should be passed directly through the render function
+   * @return {String} html
+   */ render = function(item, sourceFormatting) {
+        if (sourceFormatting) // use existing formatting on the source string
+        return sourceFormatting;
+        var boldString = item.original ? this.getItemValue(item.original) : this.getItemValue(item);
+        var indexString = this.normalize(boldString);
+        var indexOfQuery = indexString.lastIndexOf(this.query);
+        while(indexOfQuery > -1){
+            var endIndexOfQuery = indexOfQuery + this.query.length;
+            boldString = boldString.slice(0, indexOfQuery) + "<strong>" + boldString.slice(indexOfQuery, endIndexOfQuery) + "</strong>" + boldString.slice(endIndexOfQuery);
+            indexOfQuery = indexString.slice(0, indexOfQuery).lastIndexOf(this.query);
+        }
+        return boldString;
+    };
+    /**
+   * Render an custom error message in the suggestions list
+   * @param {String} msg An html string to render as an error message
+   */ renderError = function(msg) {
+        this.list.drawError(msg);
+    };
+}
+$4459fe2e485752c1$exports = $4459fe2e485752c1$var$Suggestions;
+
+
+
+if (typeof window !== "undefined") window.Suggestions = (0, (/*@__PURE__*/$parcel$interopDefault($4459fe2e485752c1$exports)));
+var $cf838c15c8b009ba$export$2e2bcd8739ae039 = (0, (/*@__PURE__*/$parcel$interopDefault($4459fe2e485752c1$exports)));
+
+
+export {$cf838c15c8b009ba$export$2e2bcd8739ae039 as default};
 //# sourceMappingURL=index.js.map
