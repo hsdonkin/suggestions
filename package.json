@@ -2,6 +2,7 @@
   "name": "suggestions",
   "version": "1.7.3",
   "description": "A typeahead component for inputs",
+  "main": "dist/index.js",
   "files": [
     "dist/index.js",
     "dist/suggestions.css"
