@@ -2,6 +2,10 @@
 
 A typeahead component for inputs
 
+## Accessibility
+This follows WCAG's combobox pattern, and decorates the input with the appropriate `aria-controls` attribute.
+https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-list/#rps_label
+
 ### Usage
 
 #### Suggestions with options
