@@ -1,4 +1,4 @@
-import Suggestions from './Suggestions';
+import Suggestions from './suggestions';
 import List from './list';
 import './suggestions.css';
 
