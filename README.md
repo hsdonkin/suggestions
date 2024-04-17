@@ -7,7 +7,7 @@ A typeahead component for inputs
 #### Suggestions with options
 
 ```js
-var Suggestions = require('suggestions');
+import Suggestions from 'suggestions';
 
 var input = document.querySelector('input');
 
