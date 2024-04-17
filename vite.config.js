@@ -11,7 +11,14 @@ export default defineConfig({
       // the proper extensions will be added
       fileName: 'index',
     },
-    rollupOptions: {},
+    rollupOptions: {
+      output: {
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name === 'style.css') return 'suggestions.css';
+          return assetInfo.name;
+        },
+      },
+    },
     plugins: [
       nodeResolve({
         browser: true,
