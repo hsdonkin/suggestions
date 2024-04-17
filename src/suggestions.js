@@ -1,6 +1,6 @@
 import extend from 'xtend';
 import fuzzy from 'fuzzy';
-import List from './List';
+import List from './list';
 
 class Suggestions {
   constructor(el, data, options) {
