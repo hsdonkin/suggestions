@@ -72,14 +72,11 @@ input.addEventListener('change', function () {
 
 ### Running locally
 
-    npm install && npm start
-
-`npm start` will run a server on port 9966. Visit http://localhost:9966/demo/
-to view the example.
+    npm install && npm run dev
 
 ### Testing
 
-    npm run test
+Tests have yet to be re-implemented, and are a great place to contribute
 
 ### Credit
 
